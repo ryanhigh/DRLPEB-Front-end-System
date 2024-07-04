@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../node_modules/@tabler/core/dist/css/tabler.css">
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <title>My Tabler Dashboard</title>
+</head>
+<body>
+    <!-- Your content here -->
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm bg-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="#">
+              <img src="../node_modules/@tabler/icons/categories/currencies/currency-ethereum.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="./home.html">
+                  <span class="nav-link-title">
+                    首页
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="./Documenta.html">
+                  <span class="nav-link-title">
+                    技术文档
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="./basic.html">
+                  <span class="nav-link-title">
+                    参数面板
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="./drl_model.html">
+                  <span class="nav-link-title">
+                    优化模型
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+               <a class="nav-link text-white" href="./result.html">
+                 <span class="nav-link-title">
+                   效果展示
+                 </span>
+               </a>
+             </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title">
+                  技术文档介绍
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-body">
+         <div class="container-xl">
+            <div class="col-sm-12 col-lg-12">
+                <div class="card">
+                    <div class="card-body" id="markdown-content">
+                        <!--这里放markdown内容 -->
+                    </div>
+                </div>
+            </div>
+         </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        // markdown content
+        const markdown=`
+# Hi, Here is DRLPEB
+在本页中，我们将介绍该基于深度强化学习的以太坊性能参数优化方案的配置依赖与实验环境，并且将会介绍我们如何获取区块链关键参数的，最后重点介绍强化学习方案以及使用的不同模型。
+## Step 1: 环境部署
+部署以太坊私有链环境，构建私有链网络。  
+\`\`\`shell
+$ webserver-1 : geth init ...
+\`\`\`
+## Step 2: 源码插入，收集数据
+获取相应的参数的方法介绍
+## Step 3: 自动化环境部署
+自动化流程设计图如下，……  
+
+![image](../picture/自动化流程图.png#pic_center)  
+
+## Step 4: 强化学习方法介绍
+        `;
+
+        //初始化Showdown转换器
+        var converter = new showdown.Converter();
+        var html = converter.makeHtml(markdown);
+        // 选择容器并将Markdown转换为HTML
+        document.getElementById('markdown-content').innerHTML = html;
+    </script>
+    
+   
+
+    <script src="../node_modules/@tabler/core/dist/js/tabler.js"></script>
+</body>
+</html>

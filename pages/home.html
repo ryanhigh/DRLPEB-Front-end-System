@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的首页</title>
+  <link rel="stylesheet" href="../node_modules/@tabler/core/dist/css/tabler.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+  <script src="../node_modules/@tabler/core/dist/js/tabler.min.js"></script>
+  <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    body {
+        background-image: url('../picture/前端主页面背景.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.5); /* 设置导航栏背景为半透明白色 */
+        /* backdrop-filter: blur(10px); /* 添加模糊效果 */
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar navbar-expand-md navbar-light d-print-none">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href=".">DRLPEB</a>
+      </h1>
+      <div class="navbar-nav flex-row order-md-last">
+        <div class="nav-item d-none d-md-flex me-3">
+          <div class="btn-list">
+            <a href="https://github.com/ryanhigh/DRLPEB-Front-end-System" class="btn btn-outline-primary" target="_blank" rel="noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M9 19c-4.418 1.3 -4.418 -1.3 -6 -2m12 2v-3.87a3.37 3.37 0 0 0 -1 -2.63c3.67 -.41 7.5 -1.79 7.5 -8a6.35 6.35 0 0 0 -1.76 -4.39a5.6 5.6 0 0 0 -.14 -4.39s-1.38 -.41 -4.48 1.68a15.38 15.38 0 0 0 -8 0c-3.1 -2.09 -4.48 -1.68 -4.48 -1.68a5.6 5.6 0 0 0 -.14 4.39a6.35 6.35 0 0 0 -1.76 4.39c0 6.21 3.83 7.59 7.5 8a3.37 3.37 0 0 0 -1 2.63v3.87"/>
+              </svg>
+              Source code
+            </a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="#" class="nav-link d-flex lh-1 text-reset p-0">
+            <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>
+            <div class="d-none d-xl-block ps-2">
+              <div>Parameter Optimizaton Group</Param></div>
+              <div class="mt-1 small text-muted">Developper</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="collapse navbar-collapse" id="navbar-menu">
+        <div class="navbar-nav pt-lg-3">
+          <a class="nav-link" href="./home.html">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l-1 -1a2 2 0 0 1 0 -2.83l8 -8a2 2 0 0 1 2.83 0l8 8a2 2 0 0 1 0 2.83l-1 1" />
+                <path d="M10 10v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2 -2v-10" />
+                <path d="M4 15v5a2 2 0 0 0 2 2h10" />
+              </svg>
+            </span>
+            <span class="nav-link-title">首页</span>
+          </a>
+          <a class="nav-link" href="./Documenta.html">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-12l-6 -6h-8a2 2 0 0 0 -2 2z" />
+                <path d="M14 4v4a1 1 0 0 0 1 1h4" />
+                <path d="M16 12h-4" />
+                <path d="M16 16h-4" />
+                <path d="M10 12h-2" />
+                <path d="M10 16h-2" />
+              </svg>
+            </span>
+            <span class="nav-link-title">技术文档介绍</span>
+          </a>
+          <a class="nav-link" href="./basic.html">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-12l-6 -6h-8a2 2 0 0 0 -2 2z" />
+                <path d="M14 4v4a1 1 0 0 0 1 1h4" />
+                <path d="M16 12h-4" />
+                <path d="M16 16h-4" />
+                <path d="M10 12h-2" />
+                <path d="M10 16h-2" />
+              </svg>
+            </span>
+            <span class="nav-link-title">状态参数面板</span>
+          </a>
+          <a class="nav-link" href="./drl_model.html">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-12l-6 -6h-8a2 2 0 0 0 -2 2z" />
+                <path d="M14 4v4a1 1 0 0 0 1 1h4" />
+                <path d="M16 12h-4" />
+                <path d="M16 16h-4" />
+                <path d="M10 12h-2" />
+                <path d="M10 16h-2" />
+              </svg>
+            </span>
+            <span class="nav-link-title">强化学习优化</span>
+          </a>
+          <a class="nav-link" href="./result.html">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-12l-6 -6h-8a2 2 0 0 0 -2 2z" />
+                <path d="M14 4v4a1 1 0 0 0 1 1h4" />
+                <path d="M16 12h-4" />
+                <path d="M16 16h-4" />
+                <path d="M10 12h-2" />
+                <path d="M10 16h-2" />
+              </svg>
+            </span>
+            <span class="nav-link-title">优化结果展示</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="row">
+        <div class="col-6">
+          <div class="card" style="height: 75vh;  background-color: transparent; border: none;">
+            <div class="card-body d-flex flex-column justify-content-center" id="content">
+              <!-- Welcome page-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer footer-transparent">
+    <div class="container">
+      <div class="row text-center align-items-center flex-row-reverse">
+        <div class="col-lg-auto ms-lg-auto">
+          <ul class="list-inline list-inline-dots mb-0">
+            <li class="list-inline-item"><a href="./docs/index.html" class="link-secondary">Documentation</a></li>
+            <li class="list-inline-item"><a href="./license.html" class="link-secondary">License</a></li>
+            <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
+            <li class="list-inline-item">
+              <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart text-pink" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 21l-8.5 -8.5a5.625 5.625 0 0 1 0 -7.75a5.625 5.625 0 0 1 7.75 0a5.625 5.625 0 0 1 7.75 0a5.625 5.625 0 0 1 0 7.75z" />
+                </svg>
+                Sponsor
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+          <ul class="list-inline list-inline-dots mb-0">
+            <li class="list-inline-item">
+              Copyright &copy; 2024
+              <a href="." class="link-secondary">Ryan Zhao</a>.
+              All rights reserved.
+            </li>
+            <li class="list-inline-item">
+              <a href="./changelog.html" class="link-secondary" rel="noopener">v1.0.0-beta11</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    // markdown content
+    const markdown=`
+# DRLPEB
+## Deep Reinforcement Learning empowered Private Ethereum Blockchain
+\> basic info ~
+    `;
+
+    //初始化Showdown转换器
+    var converter = new showdown.Converter();
+    var html = converter.makeHtml(markdown);
+    // 选择容器并将Markdown转换为HTML
+    document.getElementById('content').innerHTML = html;
+  </script>
+</body>
+</html>
