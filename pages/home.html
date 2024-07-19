@@ -18,9 +18,17 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
+    .nav-link {
+        display: flex;
+        align-items: center;
+    }
     .navbar {
         background-color: rgba(255, 255, 255, 0.5); /* 设置导航栏背景为半透明白色 */
         /* backdrop-filter: blur(10px); /* 添加模糊效果 */
+    }
+    .content {
+      font-family: 'Arial', sans-serif;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -31,7 +39,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-        <a href=".">DRLPEB</a>
+        <a href="./Documenta.html" style="text-decoration: none;">DRLPEB</a>
       </h1>
       <div class="navbar-nav flex-row order-md-last">
         <div class="nav-item d-none d-md-flex me-3">
@@ -135,6 +143,14 @@
           <div class="card" style="height: 75vh;  background-color: transparent; border: none;">
             <div class="card-body d-flex flex-column justify-content-center" id="content">
               <!-- Welcome page-->
+               <p class="card-text" style="font-family: Courier; font-size: 75px;">DRLPEB</p>
+               <p class="card-text" style="font-family: monospace; font-size: 25px;">Deep Reinforcement Learning empowered Private Ethereum Blockchain</p>
+               <p class="card-text" style="font-family: monospace; font-size: 15px;">The program combines deep reinforcement learning (especially PPO & DDQN) with private Ethereum blockchains to optimize performance from point view of TPS and tx_delay. 
+                This innovative approach enhances transaction efficiency and smart contract execution, paving the way for advanced, intelligent blockchain solutions.</p>
+               <div id="button wrapper">
+                <!-- 发现直接对button修改display值似乎无反应，查询资料知道这是css的内置问题，所以对button增加一个容器后就可以了 -->
+                  <a href="./Documenta.html" class="btn-custom" style="font-family: monospace; font-size: 20px; border: 2px solid rgba(255, 255, 255, 0.5); color: #007bff; background-color: rgba(255, 255, 255, 0.5); padding: 0.5rem 1rem; border-radius: 10px; backdrop-filter: blur(10px); text-decoration: none; display: inline-block;">get start!</a>
+               </div>
             </div>
           </div>
         </div>
@@ -146,9 +162,9 @@
       <div class="row text-center align-items-center flex-row-reverse">
         <div class="col-lg-auto ms-lg-auto">
           <ul class="list-inline list-inline-dots mb-0">
-            <li class="list-inline-item"><a href="./docs/index.html" class="link-secondary">Documentation</a></li>
+            <li class="list-inline-item"><a href="./Documenta.html" class="link-secondary">Documentation</a></li>
             <li class="list-inline-item"><a href="./license.html" class="link-secondary">License</a></li>
-            <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
+            <li class="list-inline-item"><a href="https://github.com/ryanhigh/DRLPEB-Front-end-System" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
             <li class="list-inline-item">
               <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart text-pink" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -177,7 +193,7 @@
   </footer>
 
 
-  <script>
+  <!-- <script>
     // markdown content
     const markdown=`
 # DRLPEB
@@ -190,6 +206,6 @@
     var html = converter.makeHtml(markdown);
     // 选择容器并将Markdown转换为HTML
     document.getElementById('content').innerHTML = html;
-  </script>
+  </script> -->
 </body>
 </html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/tabler.min.css">
+    <!-- <link rel="stylesheet" href="/resource/css/grid.css" type="text/css" /> -->
+
+    <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="text/javascript" src="static/js/echarts.min.js"></script>
+    <title>DRL based Ethereum Optimization</title>
+    <style>
+        h1 {
+            font-size: 28px;
+        }
+
+        #resultTable thead, #resultTable tr {
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: #02142c;
+        }
+
+        #resultTable {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: #041b39;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        #resultTable td, #resultTable th {
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: Verdana;
+            color: #072547;
+        }
+
+        #resultTable tr:nth-child(even) {
+            background: #d3dfed
+        }
+        #resultTable tr:nth-child(odd) {
+            background: #FFF
+        }
+    </style>
+</head>
+<body>
+    <!-- Your content here -->
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm bg-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="#">
+              <!-- <img src="static/icons/categories/currencies/currency-ethereum.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image"> -->
+              <img src="static/icons8-ethereum.svg" width="220" height="64" alt="Tabler" class="navbar-brand-image" style="margin-top: 20px;">  
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#wiki">
+                  <span class="nav-link-title" style="font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 20px; text-align: center; margin: auto;">
+                    技术文档
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#Dashboard">
+                  <span class="nav-link-title" style="font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 20px; text-align: center; margin: auto;">
+                    参数面板
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#model">
+                  <span class="nav-link-title" style="font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 20px; text-align: center; margin: auto;">
+                    优化模型
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item">
+               <a class="nav-link text-white" href="#optimization">
+                 <span class="nav-link-title" style="font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 20px; text-align: center; margin: auto;">
+                   效果展示
+                 </span>
+               </a>
+             </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h1 class="page-title" style="font-size: 44px; margin-left: 20px;">
+                    基于强化学习的以太坊私有链性能优化
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-body">
+         <div class="container-xl">
+            <h1 id="wiki" style="margin-left: 20px;">简要介绍</h1>
+            <div class="col-sm-12 col-lg-12">
+                <div class="card" style="margin-bottom: 28px; margin-left: 20px;">
+                    <div class="card-body">
+                        <!-- <p class="card-text">Model Option</p> -->
+                        <div class="card-text" id="markdown-content">
+                            <!--这里放markdown内容 -->
+                        </div>
+                        <!-- <h1 id="model">强化学习模型选择</h1>
+
+
+
+
+                        <h1 id="optimization">优化结果展示</h1> -->
+                    </div>
+                </div>
+            </div>
+
+            <h1 id="Dashboard" style="margin-left: 20px;">状态参数面板</h1>
+            <div class="row row-deck row-cards" style="margin-bottom: 28px; margin-left: 20px;">
+                <form class="dropdown-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-left: 20px;">
+                    <label for="option1s" style="flex-grow: 1; margin: 0 10px;">区块大小(Gaslimit)</label>
+                    <select id="option1s" name="option1s" style="flex-grow: 1; margin: 0 10px;">
+                        <option value="">选择一个选项</option>
+                    </select>
+                
+                    <label for="option2s" style="flex-grow: 1; margin: 0 10px;">区块间隔(Block Interval) seconds</label>
+                    <select id="option2s" name="option2s" style="flex-grow: 1; margin: 0 10px;">
+                        <option value="">选择一个选项</option>
+                    </select>
+                </form>
+
+                <div class="table-container" style="width: 100%; clear: both;">
+                    <!-- 响应式表格 反应相应数据 -->
+                    <table id="resultTable" style="margin: auto ;text-align: center; border-collapse: collapse;">
+                        <thead style="border: 1px solid #ddd; padding: 8px;">
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">参数名称</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">参数值</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" style="font-family: 'Times New Roman', Times, serif ; border: 1px solid #ddd; padding: 8px; text-align: center; width: auto;">
+                            <!-- dynamic add -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- <div class="col-sm-6 col-lg-3">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="row row-cards">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body" style="height: 10rem"></div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body" style="height: 10rem"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-8">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-8">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body" style="height: 10rem"></div>
+                  </div>
+                </div> -->
+              </div>
+            <h1 id="model" style="margin-left: 20px;">强化学习模型选择</h1>
+                <div class="toggle-container" style="display: flex; align-items: center; margin: 20px; justify-content: space-between; width: 100%;">
+                    <label class="toggle-label" style="display: flex; align-items: center;">
+                        <p style="margin: 0 20px 0 0;">优化模型选择</p>
+                        <input type="radio" name="model" value="ddqn">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">Double DQN(DDQN)</span>
+                        <input type="radio" name="model" value="ppo">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">Proximal Policy Optimization(PPO)</span>
+                    </label>
+                </div>
+
+                <div class="toggle-container" style="display: flex; align-items: center; margin: 20px; justify-content: space-between; width: 100%; ">
+                    <label class="toggle-label" style="display: flex; align-items: center;">
+                        <p style="margin: 0 20px 0 0;">模型训练奖励函数</p>
+                        <input type="radio" name="reward" value="version1">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">version1</span>
+                        <input type="radio" name="reward" value="version2">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">version2</span>
+                    </label>
+                </div>
+
+                <div class="row row-deck row-cards" style="margin: 20px;">
+                    <div class="col-12">
+                      <div class="card" >
+                        <div class="card-body">
+                          <div class="card-text" id="reward-content">
+                              <!--这里放markdown内容 -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                           <div id="myChart" class="chart-lg"></div>
+                        </div>
+                      </div>
+                        <!-- <div class="metric_item" id="chart1" style="height: 30rem">DDQN Reward v2</div> -->
+                    </div>
+                    <!-- <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                           <div id="myChart2" class="chart-lg"></div>
+                        </div>
+                      </div>
+                    </div> -->
+                </div>
+
+
+
+<!-- average tps optimization is 49.31005595084994% and average latency optimization is -2.84845933808288% -->
+            <h1 id="optimization" style="margin-left: 20px;">优化结果展示</h1>
+                <div class="toggle-container" style="display: flex; align-items: center; margin: 20px; justify-content: space-between; width: 100%;">
+                    <label class="toggle-label" style="display: flex; align-items: center;">
+                        <p style="margin: 0 20px 0 0;">优化模型选择</p>
+                        <input type="radio" name="model_val" value="ddqn">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">Double DQN(DDQN)</span>
+                        <input type="radio" name="model_val" value="ppo">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">Proximal Policy Optimization(PPO)</span>
+                    </label>
+                </div>
+
+                <div class="toggle-container" style="display: flex; align-items: center; margin: 20px; justify-content: space-between; width: 100%; ">
+                    <label class="toggle-label" style="display: flex; align-items: center;">
+                        <p style="margin: 0 20px 0 0;">验证实验组别</p>
+                        <input type="radio" name="val" value="onegroup">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">一组实验(对比DDQN与PPO)</span>
+                        <input type="radio" name="val" value="tengroup">
+                        <span style="padding: 10px 20px; cursor: pointer; background-color: #f1f1f1; transition: background-color 0.3s; margin-right: 10px;">十组实验(PPO下多组的优化趋势)</span>
+                    </label>
+                </div>
+                <div class="row row-deck row-cards" style="margin: 20px;">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                          <div id="myChart2" class="chart-lg"></div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-deck row-cards" style="margin: 20px;">
+                  <div class="col-12">
+                      <div class="card">
+                      <div class="card-body">
+                        <div id="myChart3" class="chart-lg"></div>
+                      </div>
+                      </div>
+                  </div>
+              </div>
+              <h3 style="margin-left: 20px;">优化结果显示，强化学习模型能够在保证交易延迟的情况下，提升以太坊私有链的吞吐量。经过十组验证，平均吞吐量提升53.42%，延迟降低3.77%</h3>
+         </div>
+        </div>
+      </div>
+    </div>
+
+    <!--简介信息的md文字  -->
+    <script>
+        // markdown content
+        const markdown=`
+首先我们将介绍该基于深度强化学习的以太坊性能参数优化方案的配置依赖与实验环境，并且将会介绍我们如何获取区块链关键参数的，最后重点介绍强化学习方案以及使用的不同模型。
+## Step 1: 环境部署
+部署以太坊私有链环境，构建私有链网络。利用以太坊客户端Geth，版本为1.11.0-stable，操作系统为Ubuntu20.04  
+1. 使用创世区块初始化环境  
+\`\`\`shell
+./build/bin/geth init --datadir ./docker_data/node1 /home/user/eth-k8s-main/genesis.json
+\`\`\`  
+2. 之后逐个对要利用的节点启动。启动操作为：
+\`\`\`shell
+./build/bin/geth --serverPort 9527 --port "30304" --authrpc.port 8553 --ws --ws.addr 172.17.60.4 --ws.port 8545 --datadir docker_data/node1/ --networkid 198324715 --allow-insecure-unlock --unlock
+436fdb8bca26dd3ff822ace980501ebae3ff133c --password docker_data/node1/password.txt --mine --miner.etherbase '436fdb8bca26dd3ff822ace980501ebae3ff133c'
+\`\`\`
+\`\`--serverPort 9527\`\`是监听端口号，默认为9527，当需要多个节点参与挖矿时，例如获取 tps文件，由于区块为多个节点打包，所以不指定端口号会导致只收集一个端口的数据，即一个节 点的数据。其他的参数通过查看节点的账户相关信息可以看到。
+## Step 2: 源码插入，收集数据
+源码可以参考[Github版本](https://github.com/ryanhigh/Go-Ethereum-Params-testing-environment)，这份源码不是最终的版本，仅供参考使用。  
+在源码中插入监听端口，在运行挖矿后，通过启动挖矿开关。
+\`\`\`shell
+cd /home/user/eth-k8s-main/cmd/recorderfile &&
+make updateaccessconfig
+\`\`\`
+系统自动在\`\`chainmaker.org/log\`\`中生成参数文件。存储格式为csv文件。源码插入方式生成的参数文件的标题、数据格式等在\`\`cmd/recorderfile/recorderfile.go\`\`中可以找到。该文件中对参数文件通过函数定义。在寻找具体参数相关数据如何获取，可通过全局搜索文件名找到源码相应位置。  
+  
+**目前已实现获取的参数**有：  
+* **tps(tx/s)**:吞吐量，使用源码插入分析\`\`tx_in_block_tps.csv\`\`文件获得。  
+* **latency(ms)**:交易延迟，使用源码插入分析\`\`tx_delay_start.csv,tx_delay_end.csv\`\`文件获得  
+* **contracttime(μs)**:合约执行时间，这里计算的是平均合约时间，即最后一个合约执行结 束的时间减去第一个合约执行开始的时间作为总时间，除以合约个数。使用源码插入方式获取，分析\`\`contract_time.csv\`\`文件获取。  
+* **dbreaadtime(μs)**:数据库读取时间，源码插入方法分析\`\`db_state_read_rate.csv\`\`文件  
+* **dbwritetime(μs)**:数据库写入时间，源码插入方法分析\`\`db_state_write_rate.csv\`\`文件  
+* **blockcommittime(ms)**:区块确认时间，源码插入方法分析\`\`block_commit_duration_start.csv,block_commit_duration_end.csv\`\`文件获取。  
+* **txqueuedelay(ms)**:交易排队延迟，源码插入方法分析\`\`tx_queue_delay.csv\`\`获取。
+## Step 3: 自动化环境部署
+自动化流程设计图如下，通过脚本每次循环修改创世区块中的相应控制参数，开启下一轮测试数据收集。
+
+![image](../static/自动化流程图.png#pic_center)  
+
+## Step 4: 强化学习方法
+我们使用了两种强化学习模型:双重Q网络(DDQN模型)与近段策略优化(PPO模型)。分别利用两种模型进行训练，证明模型训练收敛，并能够验证两种模型的优化效果。
+        `;
+
+        //初始化Showdown转换器
+        var converter = new showdown.Converter();
+        var html = converter.makeHtml(markdown);
+        // 选择容器并将Markdown转换为HTML
+        document.getElementById('markdown-content').innerHTML = html;
+    </script>
+    
+    <!-- 动态生成选项卡 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const startValue1 = 15000000;
+            const endValue1 = 30000000;
+            const interval1 = 150000;
+
+            const startValue2 = 5;
+            const endValue2 = 16;
+            const interval2 = 1;
+
+            const dropdown1 = document.getElementById("option1s");
+            const dropdown2 = document.getElementById("option2s");
+
+            function generateOptions(dropdown, startValue, endValue, interval) {
+                for (let value = startValue; value <= endValue; value += interval) {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.textContent = value;
+                    dropdown.appendChild(option);
+                }
+            }
+
+            generateOptions(dropdown1, startValue1, endValue1, interval1);
+            generateOptions(dropdown2, startValue2, endValue2, interval2);
+        });
+    </script>
+
+    <!--参数面板选项卡  -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdown1 = document.getElementById("option1s");
+            const dropdown2 = document.getElementById("option2s");
+            const resultTableBody = document.getElementById("resultTable").querySelector("tbody");
+
+            dropdown1.addEventListener("change", updateTable);
+            dropdown2.addEventListener("change", updateTable);
+
+            function updateTable() {
+                const value1 = dropdown1.value;
+                const value2 = dropdown2.value;
+
+                console.log('Selected gaslimit:', value1);
+                console.log('Selected period:', value2);
+
+                if (value1 && value2) {
+                    // $.ajax({
+                    //     url : "http://127.0.0.1:5000/get_data",
+                    //     type: "POST",
+                    //     data: JSON.stringify({
+                    //         "key1": value1,
+                    //         "key2": value2
+                    //     }),
+                    //     contentType: "application/json",
+                    //     dataType: "JSON",
+                    //     success: function (data){
+                    //         console.log('Success post');
+                    //         console.log(data);
+
+                    //         $.ajax({
+                    //             url : "http://127.0.0.1:5000/send_data",
+                    //             type: "GET",
+                    //             dataType: "JSON",
+                    //             success: function (result){
+                    //                 console.log('Success data retrieval');
+                    //                 console.log(result);
+                    //                 renderTable(result);
+                    //             },
+                    //             error: function (errorMsg){
+                    //                 console.error('Error:', errorMsg);
+                    //             }
+                    //         });
+                    //     },
+                    //     error: function (errorMsg){
+                    //         console.error('Error:', errorMsg);
+                    //     }
+                    // });
+
+
+
+                    fetch(`/get_data?key1=${value1}&key2=${value2}`)
+                        .then(response => {
+                            console.log('Response status:', response.status); // 输出响应状态码
+                            console.log('Response headers:', response.headers); // 输出响应头部信息
+                            return response.json(); // 返回 JSON 格式的数据
+                        })
+                        .then(data => {
+                            console.log('Data received:', data); // 输出从服务器返回的数据
+                            renderTable(data);
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                }
+            }
+
+            function renderTable(data) {
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = "";
+
+                Object.keys(data[0]).forEach(key => {
+                    const row = document.createElement("tr");
+                    const cellName = document.createElement('td');
+                    const cell = document.createElement('td');
+                    cellName.textContent = key;
+                    cell.textContent = data[0][key];
+                    row.appendChild(cellName);
+                    row.appendChild(cell);
+                    tableBody.appendChild(row);
+                });
+            }
+        });
+
+    </script>
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/libs/apexcharts/dist/apexcharts.min.js" defer></script>
+    
+    <!--强化学习模型部分的选项  -->
+    <script>
+      const rewardcontent = `
+### Reward Version 1: Complicted Version
+<p align="center">
+  <img src="static/r1-p1.png" alt="image" width="30%" /> <br>
+  <img src="static/r1-p2.png" alt="image" width="30%" /> <br>
+  <img src="static/r1-p3.png" alt="image" width="30%" />
+</p>
+
+
+
+
+### Reward Version 2: TLR (Throughput Latency Ration 吞吐延迟比)
+T为系统吞吐量TPS，L为交易延迟Latency
+$$ TLR = \\frac{T}{L} $$
+      `;
+      var converter = new showdown.Converter();
+      var html = converter.makeHtml(rewardcontent);
+      // 选择容器并将Markdown转换为HTML
+      document.getElementById('reward-content').innerHTML = html;
+      MathJax.typeset(); // Rerun MathJax to process new content
+    </script>
+
+
+    <script>
+        let selectedModel = '';
+        let selectedReward = '';
+        let currentIntervalId = null;
+
+        // JavaScript to handle the selected option if needed
+        document.querySelectorAll('input[name="model"]').forEach((elem) => {
+            elem.addEventListener("change", function(event) {
+                selectedModel = event.target.value;
+                console.log("Executing", selectedModel);
+                handleSelection();
+            });
+        });
+
+        document.querySelectorAll('input[name="reward"]').forEach((elem) => {
+            elem.addEventListener("change", function(event) {
+                selectedReward = event.target.value;
+                console.log("Executing", selectedReward);
+                handleSelection();
+            });
+        });
+
+        localStorage.setItem('hz', 1000) //设置刷新频率，xxx毫秒
+        hz = localStorage.getItem('hz')
+
+        function handleSelection() {
+          if (currentIntervalId) {
+            clearInterval(currentIntervalId);
+            currentIntervalId = null;
+          }
+
+          if (selectedModel === 'ddqn' && selectedReward === 'version2'){
+            console.log("Executing DDQN version2");
+            ddqn_r2_fetchData();
+            currentIntervalId = setInterval(ddqn_r2_dynamicdata, hz);
+          } else if (selectedModel === 'ppo' && selectedReward === 'version2'){
+            console.log("Executing PPO version2")
+            ppo_r2_fetchData();
+            currentIntervalId = setInterval(ppo_r2_dynamicdata, hz);
+          } else if (selectedModel === 'ddqn' && selectedReward === 'version1'){
+            console.log("Executing DDQN version1");
+            ddqn_r1_fetchData();
+            currentIntervalId = setInterval(ddqn_r1_dynamicdata, hz);
+          } else if (selectedModel === 'ppo' && selectedReward === 'version1'){
+            console.log("Executing PPO version1")
+            ppo_r1_fetchData();
+            currentIntervalId = setInterval(ppo_r1_dynamicdata, hz);
+          } else {
+            console.log("No matching selection or Version not selected.");
+          }
+        }
+
+        // ############# ddqn_reward1 chart ################
+        var ddqn_r1_chart = echarts.init(document.getElementById('myChart'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+        );
+
+        var option = {
+            grid: {
+                left: '-10',
+                right: '10',
+                top: '10',
+                bottom: '0',
+                containLabel: true
+            }
+        };
+        ddqn_r1_chart.setOption(option);
+
+        var old_data_ddqn_r1 = [];
+
+        function ddqn_r1_fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ddqn_rewardv1",
+                dataType: "json",
+                success: function (result) {
+                    ddqn_r1_chart.setOption(result);
+                    old_data_ddqn_r1 = ddqn_r1_chart.getOption().series[0].data;
+                }
+            });
+        }
+
+        function ddqn_r1_dynamicdata() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ddqn_rewardv1_dynamicdata",
+                dataType: "json",
+                success: function (result) {
+                    old_data_ddqn_r1.push([result.x_data, result.y_data]);
+                    ddqn_r1_chart.setOption({
+                        series: [{ data: old_data_ddqn_r1 }]
+                    });
+                }
+            });
+        }
+
+
+        
+        // ############# ddqn_reward2 chart ################
+        var ddqn_r2_chart = echarts.init(document.getElementById('myChart'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+        );
+
+        var option = {
+            grid: {
+                left: '0',
+                right: '10',
+                top: '10',
+                bottom: '0',
+                containLabel: true
+            }
+        };
+        ddqn_r2_chart.setOption(option);
+
+        var old_data_ddqn_r2 = [];
+
+        function ddqn_r2_fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ddqn_rewardv2",
+                dataType: "json",
+                success: function (result) {
+                    ddqn_r2_chart.setOption(result);
+                    old_data_ddqn_r2 = ddqn_r2_chart.getOption().series[0].data;
+                }
+            });
+        }
+
+        function ddqn_r2_dynamicdata() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ddqn_rewardv2_dynamicdata",
+                dataType: "json",
+                success: function (result) {
+                    old_data_ddqn_r2.push([result.x_data, result.y_data]);
+                    ddqn_r2_chart.setOption({
+                        series: [{ data: old_data_ddqn_r2 }]
+                    });
+                }
+            });
+        }
+
+        // ############# ppo_reward1 chart ################
+        var ppo_r1_chart = echarts.init(document.getElementById('myChart'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+        );
+
+        var option = {
+            grid: {
+                left: '0',
+                right: '10',
+                top: '10',
+                bottom: '0',
+                containLabel: true
+            }
+        };
+        ppo_r1_chart.setOption(option);
+
+        var old_data_ppo_r1 = [];
+
+        function ppo_r1_fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ppo_rewardv1",
+                dataType: "json",
+                success: function (result) {
+                    ppo_r1_chart.setOption(result);
+                    old_data_ppo_r1 = ppo_r1_chart.getOption().series[0].data;
+                }
+            });
+        }
+
+        function ppo_r1_dynamicdata() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ppo_rewardv1_dynamicdata",
+                dataType: "json",
+                success: function (result) {
+                    old_data_ppo_r1.push([result.x_data, result.y_data]);
+                    // console.log('cpu: ', result.x_data, result.y_data)
+                    ppo_r1_chart.setOption({
+                        series: [{ data: old_data_ppo_r1 }]
+                    });
+                }
+            });
+        }
+
+        // ############# ppo_reward2 chart ################
+        var ppo_r2_chart = echarts.init(document.getElementById('myChart'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+        );
+
+        var option = {
+            grid: {
+                left: '0',
+                right: '10',
+                top: '10',
+                bottom: '0',
+                containLabel: true
+            }
+        };
+        ppo_r2_chart.setOption(option);
+
+        var old_data_ppo_r2 = [];
+
+        function ppo_r2_fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ppo_rewardv2",
+                dataType: "json",
+                success: function (result) {
+                    ppo_r2_chart.setOption(result);
+                    old_data_ppo_r2 = ppo_r2_chart.getOption().series[0].data;
+                }
+            });
+        }
+
+        function ppo_r2_dynamicdata() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/ppo_rewardv2_dynamicdata",
+                dataType: "json",
+                success: function (result) {
+                    old_data_ppo_r2.push([result.x_data, result.y_data]);
+                    // console.log('cpu: ', result.x_data, result.y_data)
+                    ppo_r2_chart.setOption({
+                        series: [{ data: old_data_ppo_r2 }]
+                    });
+                }
+            });
+        }
+    </script>
+
+    <!-- 优化结果展示部分 -->
+    <script>
+      let selectedModelValidate = '';
+      let selectedgroup = '';
+
+      // JavaScript to handle the selected option if needed
+      document.querySelectorAll('input[name="model_val"]').forEach((elem) => {
+          elem.addEventListener("change", function(event) {
+              selectedModelValidate = event.target.value;
+              console.log("Executing", selectedModelValidate);
+              handleSelection2();
+          });
+      });
+
+      document.querySelectorAll('input[name="val"]').forEach((elem) => {
+          elem.addEventListener("change", function(event) {
+              selectedgroup = event.target.value;
+              console.log("Executing", selectedgroup);
+              handleSelection2();
+          });
+      });
+
+
+      function handleSelection2() {
+        ppo_10_tps_chart.clear();
+        ppo_10_delay_chart.clear();
+
+        if (selectedModelValidate === 'ddqn' && selectedgroup === 'onegroup'){
+          console.log("Executing DDQN onegroup");
+          ddqn_1_tps_fetchData();
+          ddqn_1_delay_fetchData();
+        } else if (selectedModelValidate === 'ppo' && selectedgroup === 'onegroup'){
+          console.log("Executing PPO version2")
+          ppo_1_tps_fetchData();
+          ppo_1_delay_fetchData();
+        } else if (selectedModelValidate === 'ddqn' && selectedgroup === 'tengroup'){
+          console.log("No");
+        } else if (selectedModelValidate === 'ppo' && selectedgroup === 'tengroup'){
+          console.log("Executing PPO version1")
+          ppo_10_tps_fetchData();
+          ppo_10_delay_fetchData();
+        } else {
+          console.log("No matching selection or Version not selected.");
+        }
+      }
+
+      // ############# ddqn_onegroup chart ################
+      var ddqn_1_tps_chart = echarts.init(document.getElementById('myChart2'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+
+      var option = {
+          grid: {
+              left: '0',
+              right: '10',
+              top: '10',
+              bottom: '0',
+              containLabel: true
+          }
+      };
+      ddqn_1_tps_chart.setOption(option);
+
+      var old_data_ddqn_1_tps = [];
+
+      function ddqn_1_tps_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/ddqn_1_tps",
+              dataType: "json",
+              success: function (result) {
+                  ddqn_1_tps_chart.setOption(result);
+                  old_data_ddqn_1_tps = ddqn_1_tps_chart.getOption().series[0].data;
+              }
+          });
+      }
+
+      var ddqn_1_delay_chart = echarts.init(document.getElementById('myChart3'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+
+      var option = {
+          grid: {
+              left: '0',
+              right: '10',
+              top: '10',
+              bottom: '0',
+              containLabel: true
+          }
+      };
+      ddqn_1_delay_chart.setOption(option);
+
+      var old_data_ddqn_1_delay = [];
+
+      function ddqn_1_delay_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/ddqn_1_delay",
+              dataType: "json",
+              success: function (result) {
+                  ddqn_1_delay_chart.setOption(result);
+                  old_data_ddqn_1_delay = ddqn_1_delay_chart.getOption().series[0].data;
+              }
+          });
+      }
+      // ############# ppo_onegroup chart ################
+      var ppo_1_tps_chart = echarts.init(document.getElementById('myChart2'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+      
+      var ppo_1_delay_chart = echarts.init(document.getElementById('myChart3'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+
+      var option = {
+          grid: {
+              left: '0',
+              right: '10',
+              top: '10',
+              bottom: '0',
+              containLabel: true
+          }
+      };
+      ppo_1_tps_chart.setOption(option);
+      ppo_1_delay_chart.setOption(option);
+
+      var old_data_ppo_1_tps = [];
+      var old_data_ppo_1_delay = [];
+
+      function ppo_1_tps_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/ppo_1_tps",
+              dataType: "json",
+              success: function (result) {
+                  ppo_1_tps_chart.setOption(result);
+                  old_data_ppo_1_tps = ppo_1_tps_chart.getOption().series[0].data;
+              }
+          });
+      }
+
+      function ppo_1_delay_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/ppo_1_delay",
+              dataType: "json",
+              success: function (result) {
+                  ppo_1_delay_chart.setOption(result);
+                  old_data_ppo_1_delay = ppo_1_delay_chart.getOption().series[0].data;
+              }
+          });
+      }
+
+      // ############# ppo_tengroup chart ################
+      var ppo_10_tps_chart = echarts.init(document.getElementById('myChart2'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+      
+      var ppo_10_delay_chart = echarts.init(document.getElementById('myChart3'), 'white', {
+            renderer: 'canvas',
+            // width: document.getElementById("metric1").offsetWidth,
+            // height: document.getElementById("metric1").offsetHeight  这种方法无法填充div两边的空白
+        }
+      );
+
+      var option = {
+          grid: {
+              left: '0',
+              right: '10',
+              top: '10',
+              bottom: '0',
+              containLabel: true
+          }
+      };
+      ppo_10_tps_chart.setOption(option);
+      ppo_10_delay_chart.setOption(option);
+
+      function ppo_10_tps_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/10_tps",
+              dataType: "json",
+              success: function (result) {
+                  ppo_10_tps_chart.setOption(result);
+              }
+          });
+      }
+
+      function ppo_10_delay_fetchData() {
+          $.ajax({
+              type: "GET",
+              url: "http://127.0.0.1:5000/10_delay",
+              dataType: "json",
+              success: function (result) {
+                  ppo_10_delay_chart.setOption(result);
+              }
+          });
+      }
+
+
+
+    </script>
+   
+
+    <script src="static/js/tabler.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

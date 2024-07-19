@@ -4,7 +4,7 @@ All notes below are taken following the [Doc Here](https://www.runoob.com/bootst
 
 ## Locally Build
 This program is based on **Tabler**(in Bootstrap) developping. 
-you can easily fork or download this repo to your local and open [Homepage](./pages/home.html) with Browser (for reference, Chrome is what i use.)
+you can easily fork or download this repo to your local and open [Homepage](./pages/home.html) with Browser (for reference, Chrome is what i use.)  
 **What's important is that you have to make sure that all Tabler dependencies you have installed, which you can find in Tabler's Readme.md file**
 
 ## Web Structure
